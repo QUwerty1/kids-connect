@@ -1,0 +1,1 @@
+declare type ChipColor = 'white' | 'transparent' | 'pink' | 'beige';
