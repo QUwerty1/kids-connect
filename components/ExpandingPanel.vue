@@ -5,21 +5,33 @@ const props = defineProps<{
     categoriesAmount: ICategoryAmount[],
 }>();
 
-defineEmits<{
-
+const emit = defineEmits<{
+    (e: 'change-selection', selectedCategories: string[]): string[]
 }>();
 
 const amountSum = ref(props.categoriesAmount.reduce((prev, current) => prev + current.amount, 0));
 const listRef = useTemplateRef('list');
 const listHeight: Ref<string | null> = ref(null);
 const isOpened = ref(true);
+const selectedCategories: string[] = reactive([]);
 
 onMounted(() => {
     listHeight.value = `${listRef.value!.offsetHeight}px`;
     isOpened.value = false;
 })
 
-function toggleList() {
+function toggleCategory(category: string): void {
+    const catIdx = selectedCategories.indexOf(category);
+    if (catIdx != -1) {
+        selectedCategories.splice(catIdx, 1);
+    } else {
+        selectedCategories.push(category);
+    }
+
+    emit('change-selection', selectedCategories);
+}
+
+function toggleList(): void {
     isOpened.value = !isOpened.value;
 }
 
@@ -36,7 +48,9 @@ function toggleList() {
             <nuxt-icon :class="{opened: isOpened}" class="chevron-icon" name="chevron-down" filled/>
         </div>
         <ul ref="list" class="list" :class="{opened: isOpened, closed: !isOpened}">
-            <li class="list-item" :key="index + '_categoryAmount'" v-for="(categoryAmount, index) in categoriesAmount">
+            <li @click="toggleCategory(categoryAmount.title)" class="list-item" :key="index + '_categoryAmount'"
+                v-for="(categoryAmount, index) in categoriesAmount"
+                :class="{selected: selectedCategories.includes(categoryAmount.title)}">
                 <span class="list-item-title">{{ categoryAmount.title }}</span>
                 <span class="list-item-amount">{{ categoryAmount.amount }}</span>
             </li>
@@ -52,6 +66,7 @@ function toggleList() {
     line-height: 17px;
 
     width: fit-content;
+    user-select: none;
 }
 
 .header {
@@ -91,12 +106,16 @@ function toggleList() {
 .list.closed {
     max-height: 0;
 }
+
 .list.opened {
     margin-top: 15px;
 }
 
 .list-item {
     width: fit-content;
+    transition-property: color;
+    cursor: pointer;
+    user-select: none;
 }
 
 .list-item::before {
@@ -111,4 +130,9 @@ function toggleList() {
     margin-left: 10px;
     color: var(--brown);
 }
+
+.selected {
+    color: var(--pink);
+}
+
 </style>
