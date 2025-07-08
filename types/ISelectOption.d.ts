@@ -1,4 +1,4 @@
 declare interface ISelectOptions {
-    value: string
-    title: string
+    value: string;
+    title: string;
 }

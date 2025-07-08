@@ -9,7 +9,8 @@ defineProps<{
 <template>
     <div class="combo-box-wrapper">
         <select class="combo-box">
-            <option class="option" :key="index + '_option'" v-for="(option, index) in options" :value="option.value">
+            <option class="option" :key="index + '_option'"
+                    v-for="(option, index) in options" :value="option.value">
                 {{ option.title }}
             </option>
             <slot></slot>
@@ -35,6 +36,7 @@ defineProps<{
     border: none;
     appearance: none;
     cursor: pointer;
+    width: 100%;
 
     font-size: 14px;
     font-weight: 400;

@@ -1,0 +1,1 @@
+declare type PriceType = 'free' | 'paid' | 'any';

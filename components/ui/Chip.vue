@@ -1,15 +1,16 @@
 <script setup lang="ts">
 
-const {size = 'default', type = 'default', color = 'transparent'} = defineProps<{
+const {size = 'default', type = 'default', color = 'transparent', disabled = false} = defineProps<{
     size?: ChipSize,
     color?: ChipColor,
-    type?: ChipType
+    type?: ChipType,
+    disabled?: boolean
 }>();
 
 </script>
 
 <template>
-    <div class="chip" :class="[size + '-size', type + '-type', color]">
+    <div class="chip" :class="[size + '-size', type + '-type', color, {disabled: disabled}]">
         <slot></slot>
     </div>
 </template>
@@ -69,5 +70,9 @@ const {size = 'default', type = 'default', color = 'transparent'} = defineProps<
     }
     .outlined-type.smallest-size {
         font-weight: 600;
+    }
+    .disabled {
+        padding-inline: 0;
+        background-color: transparent;
     }
 </style>

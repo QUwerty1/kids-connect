@@ -1,4 +1,4 @@
 declare interface ICategoryAmount {
-    title: string
-    amount: number
+    title: string;
+    amount: number;
 }
