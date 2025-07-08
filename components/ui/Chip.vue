@@ -17,7 +17,7 @@ const {size = 'default', type = 'default', color = 'transparent'} = defineProps<
 <style scoped>
     .chip {
         width: fit-content;
-        border-radius: var(--border-radius);
+        border-radius: var(--small-border-radius);
         display: flex;
         align-items: center;
     }

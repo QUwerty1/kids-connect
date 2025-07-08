@@ -14,7 +14,7 @@ const {color = 'white'} = defineProps<{
 
 <style scoped>
     .btn {
-        border-radius: var(--border-radius);
+        border-radius: var(--small-border-radius);
         box-shadow: none;
         border: none;
         background-color: var(--bg-color);

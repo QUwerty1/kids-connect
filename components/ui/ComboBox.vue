@@ -25,7 +25,7 @@ defineProps<{
     border-bottom: 1px solid var(--brown);
     align-items: center;
     width: fit-content;
-    border-radius: var(--border-radius);
+    border-radius: var(--small-border-radius);
 }
 
 .combo-box {

@@ -4,15 +4,16 @@
 
 <template>
     <label class="search-wrapper">
-        <nuxt-icon class="search-icon" name="search" filled></nuxt-icon>
+        <icon class="search-icon" name="kc:search" filled></icon>
         <input placeholder="Поиск" class="text-input" type="text">
     </label>
 </template>
 
 <style scoped>
+
 .search-wrapper {
     background-color: var(--white);
-    border-radius: var(--border-radius);
+    border-radius: var(--small-border-radius);
     width: 241px;
     padding-inline: 18px;
     height: 40px;

@@ -6,7 +6,8 @@
     --beige: #F7DAAB;
     --black: #333333;
     --blue-green: #1B7984;
-    --border-radius: 5px;
+    --small-border-radius: 5px;
+    --big-border-radius: 15px;
 
     font-family: 'Montserrat', sans-serif;
 }
