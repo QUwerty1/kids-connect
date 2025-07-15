@@ -1,11 +1,13 @@
 <script setup lang="ts">
 
+const model = defineModel();
+
 </script>
 
 <template>
     <label class="search-wrapper">
         <icon class="search-icon" name="kc:search" filled></icon>
-        <input placeholder="Поиск" class="text-input" type="text">
+        <input v-model="model" placeholder="Поиск" class="text-input" type="text">
     </label>
 </template>
 

@@ -6,22 +6,18 @@ const props = defineProps<{
     sectionInfo: ISection
 }>();
 
-function getDaysAndTime(): ISectionSchedule {
-    const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
-    const schedule: ISectionSchedule = {days: [], time: []};
-
-    props.sectionInfo.schedule.forEach((d, index) => {
-        if (d !== null) {
-            schedule.days.push(daysOfWeek[index]);
-            schedule.time.push(d);
+const selectedDaysOfWeek = computed(() => {
+    const selectedDays: string[] = [];
+    props.sectionInfo.schedule.forEach((val, idx) => {
+        if (val) {
+            selectedDays.push(daysOfWeek[idx]);
         }
     })
 
-    return schedule;
-}
-
-const schedule = getDaysAndTime();
+    return selectedDays;
+})
 
 </script>
 
@@ -30,7 +26,7 @@ const schedule = getDaysAndTime();
         <div class="image-wrapper">
             <img class="image" src="/section_placeholder.svg" alt="section-image-placeholder"/>
         </div>
-        <div style="flex-grow: 1">
+        <div style="flex-grow: 1; display: grid">
             <div style="display:flex;">
                 <h3 class="title">{{ sectionInfo.title }}</h3>
                 <div style="display: flex; gap:20px;">
@@ -44,9 +40,9 @@ const schedule = getDaysAndTime();
                 </div>
             </div>
             <div style="flex-grow: 1; color: var(--pink); margin: 10px 0;">
-                #{{ sectionInfo.category }}
+                #{{ sectionInfo.subcategory }}
             </div>
-            <div style="flex-grow: 1; display:flex;">
+            <div style="flex-grow: 1; display:flex; justify-content: space-between; height: max-content">
                 <div class="description">
                     <div class="description-icon">
                         <icon name="kc:person"/>
@@ -63,20 +59,20 @@ const schedule = getDaysAndTime();
                     <div class="description-icon">
                         <icon name="kc:clock"/>
                     </div>
-                    <div style="display:flex; gap: 10px; align-items: center">
+                    <div style="display:flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                         <span style="font-weight: 500;">
-                            {{ schedule.days.join(', ') }}
+                            {{ selectedDaysOfWeek.join(', ') }}
                         </span>
                         <chip style="width: 137px; display:flex; justify-content: center;"
                               size="small" color="beige"
                               :key="index + '_time'"
-                              v-for="(t, index) in schedule.time">
-                            {{ t }}
+                              v-for="(timeSlot, index) in sectionInfo.timeSlots">
+                            {{ timeSlot }}
                         </chip>
                     </div>
                 </div>
-                <div>
-
+                <div style="display:flex; align-items: end; justify-content: end;">
+                    <ui-button color="brown" role="link">Подробнее</ui-button>
                 </div>
             </div>
         </div>
@@ -115,6 +111,7 @@ const schedule = getDaysAndTime();
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 20px;
 }
 
 </style>

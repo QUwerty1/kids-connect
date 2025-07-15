@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+const model = defineModel();
+
 defineProps<{
     options?: ISelectOptions[]
 }>();
@@ -8,7 +10,7 @@ defineProps<{
 
 <template>
     <div class="combo-box-wrapper">
-        <select class="combo-box">
+        <select v-model="model" class="combo-box">
             <option class="option" :key="index + '_option'"
                     v-for="(option, index) in options" :value="option.value">
                 {{ option.title }}

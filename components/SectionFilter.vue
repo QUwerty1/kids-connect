@@ -9,7 +9,9 @@ const emit = defineEmits<{
     (e: 'change-selection', selectedCategories: string[]): string[]
 }>();
 
-const amountSum = ref(props.categoriesAmount.reduce((prev, current) => prev + current.amount, 0));
+const amountSum = computed(() =>
+    props.categoriesAmount.reduce((prev, current) => prev + current.amount, 0)
+);
 const listRef = useTemplateRef('list');
 const listHeight: Ref<string | null> = ref(null);
 const isOpened = ref(true);
@@ -39,7 +41,7 @@ function toggleList(): void {
 </script>
 
 <template>
-    <div class="expanding-panel">
+    <div class="section-filter">
         <div @click="toggleList" class="header">
             <div class="header-left">
                 <span class="header-title">{{ title }}</span>
@@ -60,13 +62,13 @@ function toggleList(): void {
 
 <style scoped>
 
-.expanding-panel {
+.section-filter {
     font-size: 14px;
     font-weight: 400;
     line-height: 17px;
 
-    width: fit-content;
     user-select: none;
+    cursor: pointer;
 }
 
 .header {

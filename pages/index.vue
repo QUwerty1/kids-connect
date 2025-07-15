@@ -1,49 +1,151 @@
 <script setup lang="ts">
 
-import ComboBox from "~/components/ui/ComboBox.vue";
-import Checkbox from "~/components/ui/Checkbox.vue";
-
-const priceFilter: Ref<PriceType> = ref("any");
-const testSection: ISection = {
-    "title": "Рисование для детей",
-    "category": "Искусство",
-    "img": "https://example.com/image1.jpg",
-    "price": 2500,
-    "isFirstFree": true,
-    "minAge": 5,
-    "maxAge": 12,
-    "address": "ул. Пушкина, 10",
-    "buildingTitle": "Дом творчества",
-    "schedule": ["16:00 - 17:30", "16:00 - 17:30", null, "16:00 - 17:30", null, null, null],
-    "description": "Курсы рисования для детей младшего и среднего школьного возраста.",
-    "contents": "Акварель, гуашь, карандаши, основы композиции"
+const filters = {
+    price: ref("any") as Ref<PriceType>,
+    title: ref(""),
+    age: ref("null") as Ref<"null" | number>,
+    categories: ref([]) as Ref<string[]>
 };
 
+const sections: ISection[] = reactive([]);
+
+const filteredSections = computed(() => {
+    return [...sections].filter(section =>
+        filterChain.every(f => f(section))
+    );
+})
+
+const categories = computed(() => {
+    const categories = new Map<string, string[]>();
+
+    sections.forEach(section => {
+        if (categories.has(section.category)) {
+            let subcategory = categories
+                .get(section.category)
+                ?.find(fc => fc == section.subcategory);
+            if (subcategory == undefined) {
+                categories
+                    .get(section.category)
+                    ?.push(section.subcategory)
+            }
+        } else {
+            categories.set(section.category, [section.subcategory]);
+        }
+    })
+
+    return categories;
+})
+
+const filterCategories = computed(() => {
+    const filterCategories = new Map<string, ISectionAmount>();
+    categories.value.forEach((subcategories, title) => {
+        filterCategories.set(title, {title, subcategories: []});
+        subcategories.forEach(sub => {
+            filterCategories.get(title)?.subcategories.push({title: sub, amount: 0});
+        })
+    })
+
+    filteredSections.value.forEach(section => {
+        let subcategory = filterCategories
+            .get(section.category)
+            ?.subcategories
+            .find(fs => fs.title == section.subcategory);
+
+        if (subcategory != undefined) {
+            subcategory.amount++;
+        }
+    })
+
+    const result: ISectionAmount[] = [];
+    filterCategories.forEach(category => {
+        result.push(category)
+    })
+
+    return result;
+})
+
+const sectionGroups = computed(() => {
+    const sectionGroups = new Map<string, ISection[]>();
+    filteredSections.value.forEach((val) => {
+        if (sectionGroups.has(val.category)) {
+            sectionGroups.get(val.category)?.push(val);
+        } else {
+            sectionGroups.set(val.category, [val]);
+        }
+    })
+
+    return sectionGroups;
+})
+
+const filterChain = [
+    (section: ISection) => {
+        switch (filters.price.value) {
+            case "any": {
+                return true;
+            }
+            case "free": {
+                return section.price == 0;
+            }
+            case "paid": {
+                return section.price > 0;
+            }
+        }
+    },
+    (section: ISection) => {
+        return section.title.toLowerCase().includes(filters.title.value.toLowerCase());
+    },
+    (section: ISection) => {
+        if (filters.age.value == "null") {
+            return true;
+        }
+        return filters.age.value! >= section.minAge && filters.age.value! <= section.maxAge;
+    },
+    (section: ISection) => {
+        if (filters.categories.value.length == 0) {
+            return true;
+        }
+        return filters.categories.value.includes(section.subcategory);
+    }
+]
+
 function changePriceType(type: PriceType): void {
-    priceFilter.value = type;
+    filters.price.value = type;
 }
 
 onMounted(async () => {
-
+    $fetch('/fake_sections.json')
+        .then(response => {
+            sections.push(...response as ISection[]);
+        })
 })
 
 </script>
 
 <template style="min-height: 100dvh">
-    <container class="price-filters">
+    <container class="main-container">
         <div>
             <div style="display:flex; justify-content: space-between; margin-bottom: 20px">
                 <div style="display:flex; gap: 20px">
-                    <search-input/>
-                    <ui-chip @click="changePriceType('any')" class="price-chip" :disabled="priceFilter != 'any'"
-                             color="white">Все
+                    <search-input v-model="filters.title.value"/>
+                    <ui-chip
+                        @click="changePriceType('any')"
+                        class="price-chip"
+                        :disabled="filters.price.value != 'any'"
+                        color="white">
+                        Все
                     </ui-chip>
-                    <ui-chip @click="changePriceType('paid')" class="price-chip" :disabled="priceFilter != 'paid'"
-                             color="white">
+                    <ui-chip
+                        @click="changePriceType('paid')"
+                        class="price-chip"
+                        :disabled="filters.price.value != 'paid'"
+                        color="white">
                         Платные
                     </ui-chip>
-                    <ui-chip @click="changePriceType('free')" class="price-chip" :disabled="priceFilter != 'free'"
-                             color="white">
+                    <ui-chip
+                        @click="changePriceType('free')"
+                        class="price-chip"
+                        :disabled="filters.price.value != 'free'"
+                        color="white">
                         Бесплатные
                     </ui-chip>
                 </div>
@@ -55,46 +157,17 @@ onMounted(async () => {
         </div>
         <div style="display:flex; gap: 40px;">
             <main style="flex-grow: 1">
-                <h2 class="subheader">Искусство</h2>
-                <SectionCard :section-info="testSection"/>
+                <sections-group
+                    v-for="(sectionGroup, index) in sectionGroups"
+                    :key="index + '_sectionGroup'"
+                    :title="sectionGroup[0]"
+                    :sections="sectionGroup[1]"/>
             </main>
             <aside style="width: 330px;">
-                <div class="subheader">Фильтры</div>
-                <card>
-                    <div style="flex-grow: 1">
-                        <div class="filter-category">
-                            Возраст
-                        </div>
-                        <combo-box style="width: 100%" :options="[
-                        {value: 'null', title: 'Любой'},
-                        {value: '1', title: '1 год'},
-                        {value: '2', title: '2 года'},
-                        {value: '3', title: '3 года'},
-                        {value: '4', title: '4 года'},
-                        {value: '6', title: '6 лет'},
-                        {value: '7', title: '7 лет'},
-                        {value: '5', title: '5 лет'},
-                        {value: '8', title: '8 лет'},
-                        {value: '9', title: '9 лет'},
-                        {value: '10', title: '10 лет'},
-                        {value: '11', title: '11 лет'},
-                        {value: '12', title: '12 лет'},
-                        {value: '13', title: '13 лет'},
-                        {value: '14', title: '14 лет'},
-                        {value: '15', title: '15 лет'},
-                        {value: '16', title: '16 лет'},
-                        {value: '17', title: '17 лет'},
-                        {value: '18', title: '18 лет'},
-                    ]"/>
-                        <div style="margin-top: 15px;" class="filter-category">
-                            Пол
-                        </div>
-                        <div style="display:flex; gap: 20px; flex-wrap: wrap">
-                            <checkbox>Мужской</checkbox>
-                            <checkbox>Женский</checkbox>
-                        </div>
-                    </div>
-                </card>
+                <the-filters
+                    v-model:age="filters.age.value"
+                    v-model:categories="filters.categories.value"
+                    :section-amounts="filterCategories"/>
             </aside>
         </div>
     </container>
@@ -102,30 +175,15 @@ onMounted(async () => {
 
 <style scoped>
 
-.price-filters {
+.main-container {
     border-radius: var(--big-border-radius);
     background-color: var(--light-grey);
     padding: 40px 40px;
+    margin-bottom: 40px;
 }
 
 .price-chip {
     cursor: pointer;
-}
-
-.subheader {
-    font-size: 24px;
-    font-weight: 600;
-    line-height: 29px;
-
-    margin-bottom: 30px;
-}
-
-.filter-category {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 17px;
-    width: 100%;
-    margin-bottom: 15px;
 }
 
 </style>

@@ -21,6 +21,7 @@ const {size = 'default', type = 'default', color = 'transparent', disabled = fal
         border-radius: var(--small-border-radius);
         display: flex;
         align-items: center;
+        text-wrap: nowrap;
     }
     .transparent {
         --color: var(--black);
