@@ -19,7 +19,7 @@ function changeSelectedCategories(title: string, categories: string[]) {
 
 <template>
     <div class="subheader">Фильтры</div>
-    <card>
+    <card style="padding: 10px 20px">
         <div style="flex-grow: 1">
             <div class="filter-category">
                 Возраст
@@ -55,9 +55,8 @@ function changeSelectedCategories(title: string, categories: string[]) {
             <div style="margin-top: 15px;" class="filter-category">
                 Каталог
             </div>
-            <div>
+            <div style="display:grid; grid-template-columns: 1fr; grid-auto-rows: min-content; gap: 15px">
                 <section-filter
-                    style="margin-bottom: 15px"
                     v-for="sectionAmount in sectionAmounts"
                     @change-selection="(changedCategories) => {
                         changeSelectedCategories(sectionAmount.title, changedCategories)}"
@@ -75,7 +74,7 @@ function changeSelectedCategories(title: string, categories: string[]) {
     font-weight: 600;
     line-height: 29px;
 
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .filter-category {

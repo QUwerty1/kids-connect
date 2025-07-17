@@ -1,89 +1,109 @@
 <script setup lang="ts">
 
-import Chip from "~/components/ui/Chip.vue";
+import getDaysOfWeek from "~/utils/GetDaysOfWeek";
 
 const props = defineProps<{
     sectionInfo: ISection
 }>();
 
-const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-
 const selectedDaysOfWeek = computed(() => {
-    const selectedDays: string[] = [];
-    props.sectionInfo.schedule.forEach((val, idx) => {
-        if (val) {
-            selectedDays.push(daysOfWeek[idx]);
-        }
-    })
+    return getDaysOfWeek(props.sectionInfo.schedule);
+})
 
-    return selectedDays;
+const isOneLinedTitle = ref(false);
+const titleRef = useTemplateRef<HTMLDivElement>('titleRef');
+watch(titleRef, (newVal) => {
+    isOneLinedTitle.value = newVal?.clientHeight! == 20;
 })
 
 </script>
 
 <template>
-    <card>
-        <div class="image-wrapper">
-            <img class="image" src="/section_placeholder.svg" alt="section-image-placeholder"/>
+    <card class="card-body">
+        <div class="img">
+            <img src="/section_placeholder.svg" alt="section-image">
         </div>
-        <div style="flex-grow: 1; display: grid">
-            <div style="display:flex;">
-                <h3 class="title">{{ sectionInfo.title }}</h3>
-                <div style="display: flex; gap:20px;">
-                    <chip type="outlined" size="smallest" color="pink" v-if="sectionInfo.isFirstFree">
+        <div class="card-right">
+            <div class="card-header">
+                <div ref="titleRef" class="title" :class="{ 'one-line': isOneLinedTitle }">
+                    <h3>
+                        {{ sectionInfo.title }}
+                    </h3>
+                </div>
+                <div class="chips">
+                    <ui-chip v-if="sectionInfo.isFirstFree" color="pink" type="outlined" size="smallest">
                         Первое бесплатно
-                    </chip>
-                    <chip size="smallest" color="pink">
+                    </ui-chip>
+                    <ui-chip color="pink" size="smallest">
                         <span v-if="sectionInfo.price == 0">Бесплатно</span>
-                        <span v-else>{{ sectionInfo.price }} руб. месяц</span>
-                    </chip>
+                        <span v-else>{{ sectionInfo.price }} руб.</span>
+                    </ui-chip>
                 </div>
             </div>
-            <div style="flex-grow: 1; color: var(--pink); margin: 10px 0;">
-                #{{ sectionInfo.subcategory }}
-            </div>
-            <div style="flex-grow: 1; display:flex; justify-content: space-between; height: max-content">
+            <div class="card-inner">
                 <div class="description">
-                    <div class="description-icon">
-                        <icon name="kc:person"/>
-                    </div>
-                    <div>{{ sectionInfo.minAge }}-{{ sectionInfo.maxAge }}&nbsp;лет</div>
-                    <div class="description-icon">
-                        <icon name="kc:address"/>
-                    </div>
-                    <div>{{ sectionInfo.address }}</div>
-                    <div class="description-icon">
-                        <icon name="kc:geo"/>
-                    </div>
-                    <div>{{ sectionInfo.buildingTitle }}</div>
-                    <div class="description-icon">
-                        <icon name="kc:clock"/>
-                    </div>
-                    <div style="display:flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                        <span style="font-weight: 500;">
-                            {{ selectedDaysOfWeek.join(', ') }}
-                        </span>
-                        <chip style="width: 137px; display:flex; justify-content: center;"
-                              size="small" color="beige"
-                              :key="index + '_time'"
-                              v-for="(timeSlot, index) in sectionInfo.timeSlots">
-                            {{ timeSlot }}
-                        </chip>
+                    <div class="subcategory">#{{ sectionInfo.subcategory }}</div>
+                    <div class="info">
+                        <icon class="icon" name="kc:person"></icon>
+                        <span class="info-text">{{ sectionInfo.minAge }}-{{ sectionInfo.maxAge }} лет</span>
+                        <icon class="icon" name="kc:address"></icon>
+                        <span class="info-text">{{ sectionInfo.address }}</span>
+                        <icon class="icon" name="kc:geo"></icon>
+                        <span class="info-text">{{ sectionInfo.buildingTitle }}</span>
+                        <icon class="icon" name="kc:clock"></icon>
+                        <div class="time info-text">
+                            <span>
+                                {{ selectedDaysOfWeek.join(', ') }}
+                            </span>
+                            <span class="time-chips">
+                                <ui-chip class="chip" color="beige" size="small"
+                                         :key="sectionInfo.id + '_' + index + '_timeSlot'"
+                                         v-for="(timeSlot, index) in sectionInfo.timeSlots">
+                                    {{ timeSlot }}
+                                </ui-chip>
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div style="display:flex; align-items: end; justify-content: end;">
-                    <ui-button color="brown" role="link">Подробнее</ui-button>
+                <div class="more">
+                    <nuxt-link :to="{name: 'sections-id', params: {id: sectionInfo.id}}">
+                        <ui-button role="link" color="brown">
+                            Подробнее
+                        </ui-button>
+                    </nuxt-link>
                 </div>
             </div>
         </div>
     </card>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.card-body {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
 
-.image-wrapper {
+.card-right {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+.img {
     width: 200px;
     height: 200px;
+    align-self: center;
+    justify-self: center;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,27 +111,102 @@ const selectedDaysOfWeek = computed(() => {
 }
 
 .title {
+    height: min-content;
+    width: fit-content;
+    margin-bottom: 10px;
+
     font-size: 16px;
     font-weight: 600;
     line-height: 20px;
+    letter-spacing: 0;
 
-    flex-grow: 1;
+    & > h3 {
+        width: fit-content;
+        text-wrap: balance;
+        white-space: pre-wrap;
+    }
+
+    &.one-line {
+        margin-bottom: 15px;
+    }
+}
+
+.chips {
     display: flex;
-    align-items: center;
+    gap: 20px;
+    justify-content: flex-end;
+    height: min-content;
+    flex-wrap: wrap;
 }
 
 .description {
-    display: grid;
-    grid-template-columns: 18px 1fr;
-    flex-direction: column;
-    gap: 10px;
+
+    & > .subcategory {
+        color: var(--pink);
+        margin-bottom: 10px;
+        height: 17px;
+
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 17px;
+    }
+
+    & > .info {
+        display: grid;
+        grid-template-columns: 18px 1fr;
+        grid-auto-rows: auto;
+        gap: 10px;
+
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 20px;
+
+        & > .info-text {
+            width: fit-content;
+            text-wrap: wrap;
+        }
+
+        & > .icon {
+            align-self: center;
+            justify-self: center;
+            height: 20px;
+        }
+
+        & > .time {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            height: fit-content;
+            text-wrap: nowrap;
+
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 20px;
+
+            & > .time-chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+
+                & > .chip {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    align-items: center;
+                    width: 137px;
+                }
+            }
+        }
+
+        & > .icon:has(+.time) {
+            height: 28px;
+        }
+    }
 }
 
-.description-icon {
+.more {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 20px;
+    align-items: flex-end;
+    justify-content: flex-end;
 }
-
 </style>

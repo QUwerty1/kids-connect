@@ -1,5 +1,6 @@
 :root {
     --brown: #70232F;
+    --dark-brown: #2F050F;
     --white: #FFF;
     --light-grey: #EFEFEF;
     --pink: #D86B79;
@@ -19,8 +20,8 @@
 
 /* Reset and base styles  */
 * {
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     border: none;
 }
 

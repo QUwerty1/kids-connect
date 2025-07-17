@@ -15,26 +15,7 @@ const filteredSections = computed(() => {
     );
 })
 
-const categories = computed(() => {
-    const categories = new Map<string, string[]>();
-
-    sections.forEach(section => {
-        if (categories.has(section.category)) {
-            let subcategory = categories
-                .get(section.category)
-                ?.find(fc => fc == section.subcategory);
-            if (subcategory == undefined) {
-                categories
-                    .get(section.category)
-                    ?.push(section.subcategory)
-            }
-        } else {
-            categories.set(section.category, [section.subcategory]);
-        }
-    })
-
-    return categories;
-})
+const categories = ref(new Map<string, string[]>);
 
 const filterCategories = computed(() => {
     const filterCategories = new Map<string, ISectionAmount>();
@@ -113,10 +94,17 @@ function changePriceType(type: PriceType): void {
 }
 
 onMounted(async () => {
+    $fetch('/fake_categories.json')
+        .then(response => {
+            (response as ICategory[]).forEach(category => {
+                categories.value.set(category.title, category.subcategories);
+            })
+        });
+
     $fetch('/fake_sections.json')
         .then(response => {
             sections.push(...response as ISection[]);
-        })
+        });
 })
 
 </script>
@@ -168,7 +156,7 @@ onMounted(async () => {
                     v-model:age="filters.age.value"
                     v-model:categories="filters.categories.value"
                     :section-amounts="filterCategories"/>
-            </aside>
+            </aside> 
         </div>
     </container>
 </template>

@@ -18,7 +18,8 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "2.5.0",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "sass-embedded": "^1.89.2"
   },
   "peerDependencies": {
     "typescript": "^5"

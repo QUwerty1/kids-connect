@@ -1,4 +1,5 @@
 declare interface ISection {
+    id: number;
     title: string;
     category: string;
     subcategory: string;
@@ -12,5 +13,4 @@ declare interface ISection {
     schedule: (boolean)[];
     timeSlots: string[];
     description: string;
-    contents: IContentsSection[];
 }

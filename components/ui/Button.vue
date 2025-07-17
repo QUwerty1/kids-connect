@@ -26,7 +26,7 @@ const {color = 'white'} = defineProps<{
     }
     .white {
         --bg-color: var(--white);
-        --text-color: var(--black)
+        --text-color: var(--dark-brown);
     }
     .brown {
         --bg-color: var(--brown);

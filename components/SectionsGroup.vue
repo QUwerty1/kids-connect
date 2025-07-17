@@ -22,6 +22,7 @@ defineProps<{
     font-weight: 600;
     line-height: 29px;
 
+    width: fit-content;
     margin-bottom: 20px;
 }
 

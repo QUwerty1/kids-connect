@@ -16,10 +16,11 @@ const listRef = useTemplateRef('list');
 const listHeight: Ref<string | null> = ref(null);
 const isOpened = ref(true);
 const selectedCategories: string[] = reactive([]);
+const isEmpty = computed(() => amountSum.value == 0);
 
 onMounted(() => {
     listHeight.value = `${listRef.value!.offsetHeight}px`;
-    isOpened.value = false;
+    setTimeout(() => {isOpened.value = !isEmpty.value;}, 0);
 })
 
 function toggleCategory(category: string): void {
@@ -45,7 +46,7 @@ function toggleList(): void {
         <div @click="toggleList" class="header">
             <div class="header-left">
                 <span class="header-title">{{ title }}</span>
-                <span class="amount-sum">{{ amountSum }}</span>
+                <span class="amount-sum"><span v-if="!isEmpty">{{ amountSum }}</span></span>
             </div>
             <nuxt-icon :class="{opened: isOpened}" class="chevron-icon" name="chevron-down" filled/>
         </div>
@@ -54,7 +55,11 @@ function toggleList(): void {
                 v-for="(categoryAmount, index) in categoriesAmount"
                 :class="{selected: selectedCategories.includes(categoryAmount.title)}">
                 <span class="list-item-title">{{ categoryAmount.title }}</span>
-                <span class="list-item-amount">{{ categoryAmount.amount }}</span>
+                <span class="list-item-amount">
+                    <span v-if="!isEmpty">
+                        {{ categoryAmount.amount }}
+                    </span>
+                </span>
             </li>
         </ul>
     </div>
@@ -77,10 +82,6 @@ function toggleList(): void {
 
 .header-left {
     flex-grow: 1;
-}
-
-.header-title {
-
 }
 
 .amount-sum {
