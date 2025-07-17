@@ -13,7 +13,7 @@
 
 <style scoped>
 .checkbox {
-    accent-color: var(--blue-green);
+    accent-color: var(--brown);
     height: 16px;
     width: 16px;
     margin-right: 5px;

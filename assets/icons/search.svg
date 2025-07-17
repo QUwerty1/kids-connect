@@ -1,9 +1,5 @@
-<svg width="15.504089" height="15.504089" viewBox="0 0 15.5041 15.5041" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <desc>
-        Created with Pixso.
-    </desc>
-    <defs/>
-    <path id="Vector" d="M7 13C3.68 13 1 10.31 1 7C1 3.68 3.68 1 7 1C10.31 1 13 3.68 13 7C13 10.31 10.31 13 7 13Z" stroke="#333333" stroke-opacity="1.000000" stroke-width="2.000000" stroke-linejoin="round"/>
-    <path id="Vector" d="M15.17 13.79L15.2 13.79C15.6 14.18 15.6 14.81 15.2 15.2C14.81 15.6 14.18 15.6 13.79 15.2L13.79 15.17L15.17 13.79ZM10.55 11.94L10.53 11.94C10.13 11.54 10.13 10.92 10.53 10.53C10.92 10.13 11.54 10.13 11.94 10.53L11.94 10.55L10.55 11.94Z" fill="#333333" fill-opacity="1.000000" fill-rule="nonzero"/>
-    <path id="Vector" d="M14.5 14.5L11.23 11.23" stroke="#333333" stroke-opacity="1.000000" stroke-width="2.000000" stroke-linejoin="round" stroke-linecap="round"/>
+<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9.10193 14.7622C12.4156 14.7622 15.1019 12.0759 15.1019 8.76221C15.1019 5.4485 12.4156 2.76221 9.10193 2.76221C5.78822 2.76221 3.10193 5.4485 3.10193 8.76221C3.10193 12.0759 5.78822 14.7622 9.10193 14.7622Z" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M16.6019 16.2622L13.3394 12.9997" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
+
