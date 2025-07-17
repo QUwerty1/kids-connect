@@ -13,5 +13,8 @@ export default defineNuxtConfig({
                 dir: './assets/icons'
             }
         ]
+    },
+    app: {
+        baseURL: '/kids-connect/'
     }
 })
