@@ -48,7 +48,7 @@ function toggleList(): void {
                 <span class="header-title">{{ title }}</span>
                 <span class="amount-sum"><span v-if="!isEmpty">{{ amountSum }}</span></span>
             </div>
-            <nuxt-icon :class="{opened: isOpened}" class="chevron-icon" name="chevron-down" filled/>
+            <icon :class="{opened: isOpened}" class="chevron-icon" name="kc:chevron-down"/>
         </div>
         <ul ref="list" class="list" :class="{opened: isOpened, closed: !isOpened}">
             <li @click="toggleCategory(categoryAmount.title)" class="list-item" :key="index + '_categoryAmount'"

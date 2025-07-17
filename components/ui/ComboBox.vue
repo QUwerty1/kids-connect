@@ -17,7 +17,7 @@ defineProps<{
             </option>
             <slot></slot>
         </select>
-        <nuxt-icon class="chevron-icon" name="chevron-down" filled/>
+        <icon class="chevron-icon" name="kc:chevron-down"/>
     </div>
 </template>
 

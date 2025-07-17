@@ -5,7 +5,7 @@
 <template>
     <container>
         <header class="header">
-            <icon class="logo" size="76" name="kc:logo" filled/>
+            <icon class="logo" size="76" name="kc:logo"/>
             <h1 class="title">KidsConnect</h1>
         </header>
     </container>

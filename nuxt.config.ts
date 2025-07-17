@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     css: [
         '~/assets/main.css'
     ],
-    modules: ['@nuxt/fonts', 'nuxt-icons', '@nuxt/icon'],
+    modules: ['@nuxt/fonts', '@nuxt/icon'],
     icon: {
         customCollections: [
             {

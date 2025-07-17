@@ -6,7 +6,7 @@ const model = defineModel();
 
 <template>
     <label class="search-wrapper">
-        <icon class="search-icon" name="kc:search" filled></icon>
+        <icon class="search-icon" name="kc:search"></icon>
         <input v-model="model" placeholder="Поиск" class="text-input" type="text">
     </label>
 </template>
