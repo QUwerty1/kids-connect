@@ -12,7 +12,13 @@ export default defineNuxtConfig({
                 prefix: 'kc',
                 dir: './assets/icons'
             }
-        ]
+        ],
+        // mode: 'css',
+        serverBundle: false,
+        clientBundle: {
+            scan: true,
+            sizeLimitKb: 1024
+        }
     },
     app: {
         baseURL: '/kids-connect/'
