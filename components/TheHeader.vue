@@ -1,11 +1,16 @@
 <script setup lang="ts">
 
+const {light = false} = defineProps<{
+    light?: boolean
+}>();
+
 </script>
 
 <template>
     <container>
         <header class="header">
-            <icon class="logo" size="76" name="kc:logo"/>
+            <icon v-if="!light" class="logo" size="76" name="kc:logo"/>
+            <icon v-else class="logo-light" size="72" name="kc:logo-light"/>
             <h1 class="title">KidsConnect</h1>
         </header>
     </container>
@@ -26,6 +31,11 @@
     margin-left: 40px;
     height: 87px;
     width: 78px;
+}
+.logo-light {
+    margin-left: 44px;
+    position: relative;
+    top: -2px;
 }
 
 .title {
